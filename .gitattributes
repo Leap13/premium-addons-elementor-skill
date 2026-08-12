@@ -1,0 +1,15 @@
+# Normalize all text files to LF in the repository.
+# Prevents whole-file diffs when files are edited on Windows.
+* text=auto eol=lf
+
+# Explicit for the file types this repo actually ships.
+*.md   text eol=lf
+*.json text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+
+# Never touch binaries.
+*.png  binary
+*.jpg  binary
+*.gif  binary
+*.zip  binary
