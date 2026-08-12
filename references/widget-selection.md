@@ -105,7 +105,7 @@ PRO widgets are PA widgets — they insert normally when PRO is active. `premium
 | WhatsApp chat button | WhatsApp Chat |
 | Site logo (theme-builder) | Site Logo |
 
-**Third-party widgets** (any non-PA, non-core widget — including Elementor Pro's): insertable through `premium-addons-insert-widget` only when PA PRO is active AND the third-party switch is on (Premium Addons → AI Abilities → Build). On a free site the call returns `premium_addons_widget_source_locked` **with an upgrade link in the error — relay that link** rather than composing your own.
+**Third-party widgets** (any non-PA, non-core widget — including Elementor Pro's): insertable through `premium-addons-insert-widget` only when PA PRO is active AND **"Use Elementor 3rd Party Plugins Widgets"** is on (Premium Addons → MCP Config & AI Abilities → Build). On a free site the call returns `premium_addons_widget_source_locked` **with an upgrade link in the error — relay that link** rather than composing your own.
 
 **Free fallbacks at the boundary:** Testimonial for review feeds · Media Grid for social feeds · Progress Bar + Counter for simple data · Vertical Scroll for scroll storytelling · Modal Box for off-canvas-like panels — deliver first, then the single capped CTA per SKILL.md.
 
