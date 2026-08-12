@@ -25,8 +25,8 @@ If you connect via OAuth, client registration only works for a short window afte
 
 Plugins work in chat on the web, the Chat tab in Claude Desktop, and Cowork. Add this repository as a marketplace:
 
-1. Open **Customize → Plugins → Personal plugins**
-2. Click **+**, then **Add marketplace**
+1. Open **Customize → Plugins**
+2. Click **Add**, then **Add marketplace**
 3. Choose **Add from a repository** and paste `https://github.com/Leap13/premium-addons-elementor-skill`
 4. Install **premium-addons-elementor** from the marketplace you just added
 
