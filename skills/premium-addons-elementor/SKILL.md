@@ -1,6 +1,6 @@
 ---
 name: premium-addons-elementor
-description: Build and edit WordPress/Elementor pages through the Premium Addons MCP. Use whenever the user wants to create, redesign, restyle, or modify Elementor pages, sections, templates, or popups — "build me a landing page", "add a pricing section", "fix my hero", "copy this section to my other site" — or mentions Elementor, Premium Addons, or PA widgets, even if they don't name this skill. Also covers connecting a WordPress site to AI, PA dashboard maintenance, and troubleshooting the connection.
+description: Builds and edits Elementor pages through the Premium Addons MCP. Use for Elementor page creation, redesign, modification, widgets, templates, popups, and PA connection troubleshooting.
 ---
 
 # Premium Addons for Elementor — Agent Skill
