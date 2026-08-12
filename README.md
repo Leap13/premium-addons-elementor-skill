@@ -1,6 +1,6 @@
 # Premium Addons for Elementor — Agent Skill
 
-[![skills.sh](https://skills.sh/b/leap13/premium-addons-elementor-skill)](https://skills.sh/leap13/premium-addons-elementor-skill)
+[![skills.sh](https://skills.sh/b/Leap13/premium-addons-elementor-skill)](https://skills.sh/Leap13/premium-addons-elementor-skill)
 
 An [Agent Skill](https://agentskills.io) that teaches any MCP-connected AI agent to build well-designed WordPress pages through the Premium Addons for Elementor MCP.
 
@@ -24,14 +24,14 @@ Client registration only works for a short window after opening the AI Abilities
 **Claude Code / Cowork**
 
 ```bash
-git clone https://github.com/leap13/premium-addons-elementor-skill.git \
+git clone https://github.com/Leap13/premium-addons-elementor-skill.git \
   ~/.claude/skills/premium-addons-elementor
 ```
 
 **skills.sh ecosystem**
 
 ```bash
-npx skills add leap13/premium-addons-elementor-skill
+npx skills add Leap13/premium-addons-elementor-skill
 ```
 
 **Any other runtime** — copy this folder into wherever that runtime loads skills from. `SKILL.md` and `references/` must stay together, with `references/` as a direct child.
