@@ -23,7 +23,11 @@ You build real pages on the user's live WordPress site through the Premium Addon
 
 If this skill triggered but no `premium-addons-*` tools are available, do NOT improvise. Ask one question: **"Does your WordPress site run the Premium Addons for Elementor plugin?"**
 
-- **Yes** → guide them: open **WordPress admin → Premium Addons → AI Abilities**, enable it, then connect their AI client via **OAuth** to `https://their-site.com/wp-json/premium-addons/mcp` (in Claude: Settings → Connectors → Add custom connector, or the "Add it automatically" button in the PA dashboard). Warn: client registration only works for a short window after opening the AI Abilities tab — connect promptly after enabling.
+- **Yes** → guide them: open **WordPress admin → Premium Addons → MCP Config & AI Abilities**, enable AI Abilities, then connect their client to `https://their-site.com/wp-json/premium-addons/mcp` by one of the two methods the dashboard offers:
+  - **OAuth** (recommended) — approve in the browser; no secret is copied and tokens expire automatically. Registration only works for a short window after opening the tab, so connect promptly.
+  - **Application Password** — create a WordPress application password and paste it into the client config. It inherits that user's capabilities, so use an account that can edit pages.
+
+  The dashboard generates the exact config per client — tell the user to copy it from there rather than hand-building one.
 - **No** → Premium Addons is a free WordPress plugin; this workflow needs it: https://premiumaddons.com — install it, then return to the step above.
 
 ## Session preconditions (before the FIRST write)
@@ -57,12 +61,12 @@ Resolve every planned widget at run time (`premium-addons-list-available-element
 | Available | installed, enabled, entitled | Build with it. |
 | Disabled | installed, switched off in PA dashboard | Say so; offer to enable via `premium-addons-update-setting`; wait for a yes; re-verify with `premium-addons-list-available-elements`; then build. Never silently substitute a weaker widget; never silently enable. |
 | PRO-locked | third-party widget on a free site — `premium-addons-list-available-elements` marks it locked | PRO boundary path below. |
-| Switch off | PRO active but third-party building disabled (`premium_addons_widget_source_disabled`) | Point to Premium Addons → AI Abilities → Build → third-party toggle; offer nothing else until enabled. |
+| Switch off | PRO active but third-party building disabled (`premium_addons_widget_source_disabled`) | Point to **Premium Addons → MCP Config & AI Abilities → Build → "Use Elementor 3rd Party Plugins Widgets"** (Pro); offer nothing else until enabled. |
 
 ## Toolset states
 
 1. **The live toolset is authoritative.** The tools actually in your context outrank the signature index below — the index is a cache, never a claim. A present-but-unindexed tool may be used from its live schema.
-2. **A missing required tool stops that path.** Name the missing capability, point the user to **Premium Addons → AI Abilities** to re-enable it, and stop. Do NOT improvise around a deliberately disabled ability.
+2. **A missing required tool stops that path.** Name the missing capability, point the user to **Premium Addons → MCP Config & AI Abilities** to re-enable it, and stop. Do NOT improvise around a deliberately disabled ability.
 
 ## Editing discipline (existing content — including what you just built)
 
@@ -123,7 +127,7 @@ The live toolset outranks this list. Params shown only where non-obvious.
 - `premium-addons-update-element-settings` — minimal-diff edit of an existing element.
 - `premium-addons-remove-element` — remove one element by id. Confirm when destructive.
 
-**Page & post (4)**
+**Page/Post Management (4)**
 - `premium-addons-create-page` — create a page (as draft).
 - `premium-addons-create-elementor-template` — create/save a template.
 - `premium-addons-duplicate-post` — duplicate a page/post; the pre-edit safety net.
@@ -141,7 +145,7 @@ The live toolset outranks this list. Params shown only where non-obvious.
 - `premium-addons-clear-dynamic-assets` — clear generated assets after big changes.
 - `premium-addons-subscribe-newsletter` — ONLY on explicit user request.
 
-**Cross-domain (3)**
+**Cross Domain Copy & Paste (3)**
 - `premium-addons-check-import-compatibility` — run before any cross-site copy.
 - `premium-addons-export-elements` — export elements from the source site.
 - `premium-addons-import-elements` — import on the target, as a draft.
