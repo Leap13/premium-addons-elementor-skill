@@ -21,11 +21,11 @@ If you connect via OAuth, client registration only works for a short window afte
 
 ## Install
 
-**Claude Code / Cowork**
+**As a Claude plugin** (recommended — Claude Code and Cowork)
 
-```bash
-git clone https://github.com/Leap13/premium-addons-elementor-skill.git \
-  ~/.claude/skills/premium-addons-elementor
+```
+/plugin marketplace add Leap13/premium-addons-elementor-skill
+/plugin install premium-addons-elementor@leap13
 ```
 
 **skills.sh ecosystem**
@@ -34,20 +34,26 @@ git clone https://github.com/Leap13/premium-addons-elementor-skill.git \
 npx skills add Leap13/premium-addons-elementor-skill
 ```
 
-**Any other runtime** — copy this folder into wherever that runtime loads skills from. `SKILL.md` and `references/` must stay together, with `references/` as a direct child.
+**Manual** — copy `skills/premium-addons-elementor/` into wherever your runtime loads skills from (`~/.claude/skills/` for Claude Code). `SKILL.md` and `references/` must stay together, with `references/` as a direct child.
 
 ## What's inside
 
 ```
-SKILL.md                      core workflow, safety gates, ability index
-references/
-├── widget-selection.md       intent → widget map, free/PRO flags
-├── global-addons.md          effect vocabulary → addon
-├── page-patterns.md          section recipes
-└── troubleshooting.md        connection, auth, permissions, renders-nothing
+.claude-plugin/
+├── plugin.json               plugin manifest — the version lives here
+└── marketplace.json          marketplace catalog for /plugin marketplace add
+skills/premium-addons-elementor/
+├── SKILL.md                  core workflow, safety gates, ability index
+└── references/
+    ├── widget-selection.md   intent → widget map, free/PRO flags
+    ├── global-addons.md      effect vocabulary → addon
+    ├── page-patterns.md      section recipes
+    └── troubleshooting.md    connection, auth, permissions, renders-nothing
 ```
 
 `SKILL.md` loads always; references load on demand.
+
+The plugin ships no MCP configuration, because the Premium Addons endpoint is specific to your site. Connect it yourself from the PA dashboard — the skill walks you through it.
 
 ## Posture
 
@@ -62,7 +68,7 @@ Per-page design rules are **not** in this repository. They are served by your ow
 
 ## Versioning
 
-Semver, independent of the Premium Addons plugin version. Releases are cut when judgment content changes, not mechanically per plugin release.
+Semver, independent of the Premium Addons plugin version. Releases are cut when judgment content changes, not mechanically per plugin release. The version is declared once, in `.claude-plugin/plugin.json` — the Agent Skill spec allows only `name` and `description` in `SKILL.md` frontmatter, so it cannot live there.
 
 ## Issues and contributions
 

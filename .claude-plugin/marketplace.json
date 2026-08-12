@@ -1,0 +1,17 @@
+{
+  "name": "leap13",
+  "owner": {
+    "name": "Leap13",
+    "url": "https://premiumaddons.com"
+  },
+  "plugins": [
+    {
+      "name": "premium-addons-elementor",
+      "source": "./",
+      "description": "Build and edit Elementor pages on your WordPress site through the Premium Addons MCP, with the design judgment the MCP alone doesn't carry.",
+      "author": {
+        "name": "Leap13"
+      }
+    }
+  ]
+}
