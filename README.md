@@ -15,9 +15,9 @@ The MCP gives an agent **capability** — abilities it can call. This skill give
 | WordPress | with [Elementor](https://elementor.com) active |
 | [Premium Addons for Elementor](https://premiumaddons.com) | free version is enough |
 | PA dashboard | **Premium Addons → AI Abilities** enabled |
-| Your AI client | connected to `https://your-site.com/wp-json/premium-addons/mcp` via OAuth |
+| Your AI client | connected to `https://your-site.com/wp-json/premium-addons/mcp` — via OAuth (recommended) or an Application Password |
 
-Client registration only works for a short window after opening the AI Abilities tab — connect promptly after enabling.
+If you connect via OAuth, client registration only works for a short window after opening the MCP Config & AI Abilities tab — connect promptly after enabling.
 
 ## Install
 
