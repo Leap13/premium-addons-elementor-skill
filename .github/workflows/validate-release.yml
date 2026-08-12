@@ -1,0 +1,85 @@
+name: Validate Release
+
+on:
+    push:
+        tags:
+            - "v*"
+
+permissions:
+    contents: read
+
+jobs:
+    validate:
+        name: Validate Release Version
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Validate tag and plugin version
+              shell: bash
+              run: |
+                  set -euo pipefail
+
+                  TAG="${GITHUB_REF_NAME}"
+
+                  if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+                    echo "Invalid release tag: $TAG"
+                    echo "Expected format: vMAJOR.MINOR.PATCH"
+                    exit 1
+                  fi
+
+                  TAG_VERSION="${TAG#v}"
+
+                  PLUGIN_VERSION="$(
+                    python - <<'PY'
+                  import json
+
+                  with open(".claude-plugin/plugin.json", encoding="utf-8") as f:
+                      data = json.load(f)
+
+                  print(data["version"])
+                  PY
+                  )"
+
+                  echo "Git tag version:     $TAG_VERSION"
+                  echo "Plugin JSON version: $PLUGIN_VERSION"
+
+                  if [[ "$TAG_VERSION" != "$PLUGIN_VERSION" ]]; then
+                    echo "Version mismatch."
+                    exit 1
+                  fi
+
+                  echo "Release version validation passed."
+
+            - name: Validate marketplace plugin name
+              shell: bash
+              run: |
+                  set -euo pipefail
+
+                  python - <<'PY'
+                  import json
+
+                  with open(".claude-plugin/plugin.json", encoding="utf-8") as f:
+                      plugin = json.load(f)
+
+                  with open(".claude-plugin/marketplace.json", encoding="utf-8") as f:
+                      marketplace = json.load(f)
+
+                  plugin_name = plugin["name"]
+
+                  matches = [
+                      item
+                      for item in marketplace.get("plugins", [])
+                      if item.get("name") == plugin_name
+                  ]
+
+                  assert matches, (
+                      f"Plugin '{plugin_name}' is missing from marketplace.json"
+                  )
+
+                  print(f"Release validated for plugin: {plugin_name}")
+                  PY

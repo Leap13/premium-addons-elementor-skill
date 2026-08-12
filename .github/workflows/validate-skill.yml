@@ -1,0 +1,179 @@
+name: Validate Skill
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
+
+permissions:
+    contents: read
+
+jobs:
+    validate:
+        name: Validate Skill and Plugin
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.x"
+
+            - name: Validate required files
+              shell: bash
+              run: |
+                  set -euo pipefail
+
+                  test -f "skills/premium-addons-elementor/SKILL.md"
+                  test -f ".claude-plugin/plugin.json"
+                  test -f ".claude-plugin/marketplace.json"
+
+            - name: Validate JSON
+              shell: bash
+              run: |
+                  set -euo pipefail
+
+                  python - <<'PY'
+                  import json
+                  from pathlib import Path
+
+                  for path in [
+                      Path(".claude-plugin/plugin.json"),
+                      Path(".claude-plugin/marketplace.json"),
+                  ]:
+                      with path.open(encoding="utf-8") as f:
+                          json.load(f)
+                      print(f"Valid JSON: {path}")
+                  PY
+
+            - name: Validate plugin metadata
+              shell: bash
+              run: |
+                  set -euo pipefail
+
+                  python - <<'PY'
+                  import json
+                  from pathlib import Path
+
+                  plugin_path = Path(".claude-plugin/plugin.json")
+                  marketplace_path = Path(".claude-plugin/marketplace.json")
+
+                  plugin = json.loads(plugin_path.read_text(encoding="utf-8"))
+                  marketplace = json.loads(marketplace_path.read_text(encoding="utf-8"))
+
+                  required_plugin_fields = [
+                      "name",
+                      "version",
+                      "description",
+                      "author",
+                      "license",
+                  ]
+
+                  for field in required_plugin_fields:
+                      assert field in plugin, f"Missing plugin.json field: {field}"
+
+                  assert isinstance(plugin["version"], str), "plugin.json version must be a string"
+
+                  plugins = marketplace.get("plugins")
+                  assert isinstance(plugins, list) and plugins, \
+                      "marketplace.json must contain at least one plugin"
+
+                  marketplace_plugin = next(
+                      (
+                          item
+                          for item in plugins
+                          if item.get("name") == plugin["name"]
+                      ),
+                      None,
+                  )
+
+                  assert marketplace_plugin is not None, (
+                      f"marketplace.json does not define plugin '{plugin['name']}'"
+                  )
+
+                  assert marketplace_plugin.get("source") == "./", (
+                      "marketplace.json plugin source must be './'"
+                  )
+
+                  print(f"Plugin: {plugin['name']}")
+                  print(f"Version: {plugin['version']}")
+                  print("Plugin metadata validation passed.")
+                  PY
+
+            - name: Validate SKILL.md frontmatter
+              shell: bash
+              run: |
+                  set -euo pipefail
+
+                  python - <<'PY'
+                  from pathlib import Path
+
+                  path = Path("skills/premium-addons-elementor/SKILL.md")
+                  content = path.read_text(encoding="utf-8")
+
+                  assert content.startswith("---\n"), "SKILL.md must start with YAML frontmatter"
+
+                  end = content.find("\n---\n", 4)
+                  assert end != -1, "SKILL.md frontmatter closing delimiter not found"
+
+                  frontmatter = content[4:end]
+
+                  fields = {}
+                  for line in frontmatter.splitlines():
+                      if ":" not in line:
+                          continue
+                      key, value = line.split(":", 1)
+                      fields[key.strip()] = value.strip()
+
+                  assert fields.get("name"), "SKILL.md is missing 'name'"
+                  assert fields.get("description"), "SKILL.md is missing 'description'"
+
+                  name = fields["name"]
+                  description = fields["description"]
+
+                  assert len(name) <= 64, \
+                      f"SKILL.md name is too long: {len(name)} characters"
+
+                  assert len(description) <= 1024, \
+                      f"SKILL.md description is too long: {len(description)} characters"
+
+                  print(f"Skill name: {name}")
+                  print(f"Description length: {len(description)} characters")
+                  print("SKILL.md frontmatter validation passed.")
+                  PY
+
+            - name: Validate reference files
+              shell: bash
+              run: |
+                  set -euo pipefail
+
+                  python - <<'PY'
+                  import re
+                  from pathlib import Path
+
+                  skill_path = Path("skills/premium-addons-elementor/SKILL.md")
+                  content = skill_path.read_text(encoding="utf-8")
+
+                  references = re.findall(r'`(references/[^`]+)`', content)
+
+                  missing = []
+
+                  for reference in sorted(set(references)):
+                      path = skill_path.parent / reference
+                      if not path.is_file():
+                          missing.append(reference)
+
+                  if missing:
+                      print("Missing referenced files:")
+                      for path in missing:
+                          print(f"  - {path}")
+                      raise SystemExit(1)
+
+                  print(f"Validated {len(set(references))} referenced file(s).")
+                  PY
