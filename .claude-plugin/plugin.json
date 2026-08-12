@@ -1,7 +1,7 @@
 {
   "name": "premium-addons-elementor",
   "version": "1.0.0",
-  "description": "Teaches Claude to build well-designed WordPress pages through the Premium Addons for Elementor MCP — widget selection, design-token discipline, safe-write gates, and free/PRO boundary handling.",
+  "description": "Helps Claude build well-designed WordPress pages through the Premium Addons for Elementor MCP — widget selection, design-token discipline, safe-write gates, and free/PRO boundary handling.",
   "author": {
     "name": "Leap13",
     "url": "https://premiumaddons.com"

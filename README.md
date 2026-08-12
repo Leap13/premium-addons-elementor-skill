@@ -2,7 +2,7 @@
 
 [![skills.sh](https://skills.sh/b/Leap13/premium-addons-elementor-skill)](https://skills.sh/Leap13/premium-addons-elementor-skill)
 
-An [Agent Skill](https://agentskills.io) that teaches any MCP-connected AI agent to build well-designed WordPress pages through the Premium Addons for Elementor MCP.
+An [Agent Skill](https://agentskills.io) that helps MCP-connected AI agents build well-designed WordPress pages through the Premium Addons for Elementor MCP.
 
 > **Note:** This repository contains the AI Agent Skill, not the Premium Addons for Elementor plugin source code.
 
@@ -13,15 +13,24 @@ The MCP gives an agent **capability** — abilities it can call. This skill give
 | | |
 |---|---|
 | WordPress | with [Elementor](https://elementor.com) active |
-| [Premium Addons for Elementor](https://premiumaddons.com) | free version is enough |
-| PA dashboard | **Premium Addons → AI Abilities** enabled |
+| [Premium Addons for Elementor](https://wordpress.org/plugins/premium-addons-for-elementor/) | **required** — install from the WordPress plugin directory; the free version is enough |
+| PA dashboard | **Premium Addons → MCP Config & AI Abilities** enabled |
 | Your AI client | connected to `https://your-site.com/wp-json/premium-addons/mcp` — via OAuth (recommended) or an Application Password |
 
 If you connect via OAuth, client registration only works for a short window after opening the MCP Config & AI Abilities tab — connect promptly after enabling.
 
 ## Install
 
-**As a Claude plugin** (recommended — Claude Code and Cowork)
+**Claude.ai, Claude Desktop, or Cowork** — no terminal needed
+
+Plugins work in chat on the web, the Chat tab in Claude Desktop, and Cowork. Add this repository as a marketplace:
+
+1. Open **Customize → Plugins → Personal plugins**
+2. Click **+**, then **Add marketplace**
+3. Choose **Add from a repository** and paste `https://github.com/Leap13/premium-addons-elementor-skill`
+4. Install **premium-addons-elementor** from the marketplace you just added
+
+**Claude Code**
 
 ```
 /plugin marketplace add Leap13/premium-addons-elementor-skill
@@ -34,7 +43,45 @@ If you connect via OAuth, client registration only works for a short window afte
 npx skills add Leap13/premium-addons-elementor-skill
 ```
 
-**Manual** — copy `skills/premium-addons-elementor/` into wherever your runtime loads skills from (`~/.claude/skills/` for Claude Code). `SKILL.md` and `references/` must stay together, with `references/` as a direct child.
+**Manual** — clone the repository and copy the skill folder to wherever your runtime loads skills from:
+
+```bash
+git clone https://github.com/Leap13/premium-addons-elementor-skill.git
+cp -r premium-addons-elementor-skill/skills/premium-addons-elementor ~/.claude/skills/
+```
+
+`SKILL.md` and `references/` must stay together, with `references/` as a direct child. Every release also ships a packaged `.plugin` archive you can install directly.
+
+## Usage
+
+### Connect your site first
+
+The skill can do nothing until your AI client is connected to your site. In WordPress admin:
+
+1. Go to **Premium Addons → MCP Config & AI Abilities**
+2. Turn on **Enable AI Abilities**
+3. Open the **MCP Server** panel and choose a **Connection method** — **OAuth** (recommended; approve in the browser, nothing to copy, tokens expire on their own) or **Application Password** (paste a generated password into your client config)
+4. Pick your AI client from the list and copy the configuration the dashboard generates for it. The endpoint is `https://your-site.com/wp-json/premium-addons/mcp`
+5. For OAuth, approve the connection when your browser opens
+
+Connect promptly after enabling — OAuth client registration only works for a short window after the tab is opened. To revoke later, use **Disconnect all clients** in the same panel; it revokes every token the site has issued.
+
+### Then just ask
+
+Describe what you want in plain language. The skill activates on its own when a request involves Elementor or Premium Addons — you do not need to name it.
+
+```
+Build a pricing section on my staging page with three plans.
+Fix the spacing in my hero — it's cramped on mobile.
+Copy the testimonials section from my old site to this one.
+My widgets aren't showing up in the AI tools. What's wrong?
+```
+
+**What happens next.** The skill runs a five-phase workflow: it reads your site's design guide, global colours, fonts, and available widgets before generating anything; commits to a design direction and states its plan; asks before anything destructive; builds with v3 containers by default; then verifies every element landed correctly and runs a design QA pass.
+
+**What it will not do without asking.** Publish a page, change post status, delete an element, enable a disabled widget, alter global settings or theme styles, or edit a page you did not put in scope. New work lands as a draft.
+
+**If a widget needs PA PRO**, the skill builds the closest free alternative first and tells you plainly what it does and doesn't cover.
 
 ## What's inside
 
@@ -57,9 +104,9 @@ The plugin ships no MCP configuration, because the Premium Addons endpoint is sp
 
 ## Posture
 
-- **Zero network.** The skill makes no outbound requests. Everything it needs comes from the MCP connection you already authorized.
+- **No direct network access.** The skill itself makes no outbound HTTP requests. Site operations occur through the MCP connection you explicitly configure.
 - **Zero scripts.** No executables, no build step, no postinstall. Execution belongs to the MCP.
-- **Zero site data.** Nothing about your site is stored in these files. Site tokens, widget schemas, and design rules are fetched live from your own installation each session.
+- **No bundled site data.** Nothing about your site is stored or persisted by the skill. Site information is retrieved at runtime through your authorized MCP connection.
 - **Drafts by default.** The skill never publishes, deletes, or changes site-wide settings without explicit approval in-conversation.
 
 ## Design judgment
